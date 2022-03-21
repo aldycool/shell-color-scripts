@@ -1,8 +1,11 @@
 # Shell Color Scripts
 
 > Fork of: https://github.com/charitarthchugh/shell-color-scripts, with these changes:
+>
 > Adapted to MacOS iTerm2
+>
 > Fixed question marks renders (such as pacman)
+>
 > Added a presets file to list a subset of colorscripts files to be randomized (much like --random, but from a presets file)
 
 ![Screenshot of shell-color-scripts](https://gitlab.com/dwt1/dotfiles/raw/master/.screenshots/dotfiles12.png)
