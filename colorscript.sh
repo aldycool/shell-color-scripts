@@ -1,11 +1,13 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 # Simple CLI for shell-color-scripts
 
-DIR_COLORSCRIPTS="/opt/shell-color-scripts/colorscripts"
+DIR_COLORSCRIPTS="colorscripts"
 fmt_help="  %-20s\t%-54s\n"
-list_colorscripts="$(/usr/bin/ls "${DIR_COLORSCRIPTS}" | cut -d ' ' -f 1 | nl)"
-length_colorscripts="$(/usr/bin/ls "${DIR_COLORSCRIPTS}" | wc -l)"
+list_colorscripts="$(ls "${DIR_COLORSCRIPTS}" | cut -d ' ' -f 1 | nl)"
+length_colorscripts="$(ls "${DIR_COLORSCRIPTS}" | wc -l)"
+list_presets="$(cat presets | nl)"
+length_presets="$(cat presets | wc -l)"
 function _help() {
     echo "Description: A collection of terminal color scripts."
     echo ""
@@ -14,7 +16,8 @@ function _help() {
         "-h, --help, help" "Print this help." \
         "-l, --list, list" "List all installed color scripts." \
         "-r, --random, random" "Run a random color script." \
-        "-e, --exec, exec" "Run a specified color script by SCRIPT NAME or INDEX."
+        "-e, --exec, exec" "Run a specified color script by SCRIPT NAME or INDEX." \
+        "-p, --presets, presets" "Run a random color script from the presets file"
 }
 
 function _list() {
@@ -27,6 +30,16 @@ function _random() {
     [[ $random_index -eq 0 ]] && random_index=1
 
     random_colorscript="$(echo  "${list_colorscripts}" | sed -n ${random_index}p \
+        | tr -d ' ' | tr '\t' ' ' | cut -d ' ' -f 2)"
+    echo "${random_colorscript}"
+    exec "${DIR_COLORSCRIPTS}/${random_colorscript}"
+}
+
+function _presets() {
+    declare -i random_index=$RANDOM%$length_presets
+    [[ $random_index -eq 0 ]] && random_index=1
+
+    random_colorscript="$(echo  "${list_presets}" | sed -n ${random_index}p \
         | tr -d ' ' | tr '\t' ' ' | cut -d ' ' -f 2)"
     echo "${random_colorscript}"
     exec "${DIR_COLORSCRIPTS}/${random_colorscript}"
@@ -81,6 +94,9 @@ case "$#" in
                 ;;
             -r | --random | random)
                 _random
+                ;;
+            -p | --presets | presets)
+                _presets
                 ;;
             *)
                 echo "Input error."
